@@ -16,7 +16,7 @@ NewsPaper
            {% for new in news %}
            <tr>
                <td>{{ new.title }}</td>
-               <td>{{ new.post_time|date:'d M Y' }}</td>
+               <td>{{ new.date_in|date:'d M Y' }}</td>
                <td>{{ new.text|truncatechars:20 }}</td>
            </tr>
    {% endfor %}
