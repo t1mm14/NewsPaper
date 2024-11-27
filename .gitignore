@@ -6323,3 +6323,6 @@ news/migrations/__pycache__/0001_initial.cpython-312.pyc
 news/__pycache__/urls.cpython-312.pyc
 news/__pycache__/views.cpython-312.pyc
 news/templatetags/__pycache__/custom_filters.cpython-312.pyc
+news/__pycache__/filters.cpython-312.pyc
+news/__pycache__/forms.cpython-312.pyc
+templates/flatpages/default.html
