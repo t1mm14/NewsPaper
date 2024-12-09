@@ -38,8 +38,8 @@ class PostDetail(DetailView):
     template_name = 'details.html'
     context_object_name = 'new'
 
-class PostCreate(CreateView):
-    permission_required = ('news.add_post')
+class PostCreate(CreateView , PermissionRequiredMixin):
+    permission_required = ('news.add_post',)
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
@@ -51,13 +51,14 @@ class PostCreate(CreateView):
         post.save()
         return super().form_valid(form)
 
-class PostUpdate(UpdateView):
-        permission_required = ('news.change_post')
-        form_class = PostForm
-        model = Post
-        template_name = 'post_edit.html'
+class PostUpdate(UpdateView , PermissionRequiredMixin):
+    permission_required = ('news.change_post',)
+    form_class = PostForm
+    model = Post
+    template_name = 'post_edit.html'
 
-class PostDelete(DeleteView):
+class PostDelete(DeleteView , PermissionRequiredMixin):
+    permission_required = ('news.delete_post')
     form_class = PostForm
     model = Post
     template_name = 'post_delete.html'
