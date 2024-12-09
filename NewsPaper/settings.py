@@ -158,4 +158,4 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
+ACCOUNT_FORMS = {'signup': 'sign.models.CommonSignupForm'}
