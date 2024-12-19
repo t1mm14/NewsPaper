@@ -50,6 +50,10 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.yandex',
 ]
 
+DEFAULT_FROM_EMAIL = 'timofeiturzanov@yandex.ru',
+
+SITE_ID = 2
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -125,7 +129,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-SITE_ID = 2
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -149,6 +152,13 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+# Email settings
+EMAIL_HOST = 'smtp.yandex.ru'  # адрес сервера Яндекс-почты для всех один и тот же
+EMAIL_PORT = 465  # порт smtp сервера
+EMAIL_HOST_USER = 'timofeiturzanov@yandex.ru'  # ваш почтовый ящик яндекса
+EMAIL_HOST_PASSWORD = 'Pilot7723'  # пароль от почты
+EMAIL_USE_SSL = True  # Яндекс использует ssl
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True

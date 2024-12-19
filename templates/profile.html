@@ -1,0 +1,16 @@
+<h3>Ваши подписки на категории:</h3>
+{% if subscribed_categories %}
+    <ul>
+    {% for category in subscribed_categories %}
+        <li>
+            {{ category.name }}
+            <form action="{% url 'subscribe_category' category.id %}" method="POST" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-danger">Отписаться</button>
+            </form>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Вы пока не подписаны ни на одну категорию.</p>
+{% endif %}

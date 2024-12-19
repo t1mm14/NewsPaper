@@ -1,10 +1,29 @@
 {% extends 'default.html' %}
 
 {% block content %}
+<h1>Создание публикации</h1>
 
-<form method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Обновить">
-</form>
+{% if messages %}
+<div class="alert alert-danger">
+    {% for message in messages %}
+        {{ message }}
+    {% endfor %}
+</div>
+{% endif %}
 
-{%endblock content %}
+{% if posts_left > 0 %}
+    <div class="alert alert-info">
+        Осталось публикаций на сегодня: {{ posts_left }}
+    </div>
+    
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Создать публикацию">
+    </form>
+{% else %}
+    <div class="alert alert-warning">
+        Вы достигли лимита публикаций на сегодня. Попробуйте завтра!
+    </div>
+{% endif %}
+{% endblock %}

@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
+from django.core.exceptions import ValidationError
+from django.utils import timezone
+from datetime import timedelta
 
 
 class Author(models.Model):
@@ -25,6 +28,10 @@ class Author(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=25, unique=True)
+    subscribers = models.ManyToManyField(User, related_name='subscribed_categories', blank=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Post(models.Model):
@@ -56,6 +63,23 @@ class Post(models.Model):
     
     def __str__(self):
         return self.title
+
+    def clean(self):
+        # Получаем текущее время
+        today = timezone.now()
+        # Получаем время 24 часа назад
+        yesterday = today - timedelta(days=1)
+        
+        # Считаем количество постов автора за последние 24 часа
+        posts_per_day = Post.objects.filter(
+            author=self.author,
+            created_at__gte=yesterday
+        ).count()
+        
+        if posts_per_day >= 3:
+            raise ValidationError(
+                'Нельзя публиковать более трех новостей в сутки'
+            )
 
 
 class PostCategory(models.Model):
