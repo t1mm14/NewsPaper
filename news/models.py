@@ -33,6 +33,14 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+class Article(models.Model):
+    title = models.CharField(max_length=200)  # Заголовок статьи
+    url = models.URLField()  # URL статьи
+    category = models.CharField(max_length=100)  # Категория статьи
+    created_at = models.DateTimeField(auto_now_add=True)  # Дата создания статьи
+
+    def __str__(self):
+        return self.title
 
 class Post(models.Model):
     news = 'NW'
