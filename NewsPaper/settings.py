@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 import redis
+from celery import Celery
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -63,6 +64,14 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+ 
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'NewsPaper.settings')
+ 
+app = Celery('NewsPaper')
+app.config_from_object('django.conf:settings', namespace = 'CELERY')
+
+app.autodiscover_tasks()
 
 
 DEFAULT_FROM_EMAIL = 'timofeiturzanov@yandex.ru',
