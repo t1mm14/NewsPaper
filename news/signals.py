@@ -18,7 +18,7 @@ def notify_subscribers(sender, instance, **kwargs):
 def send_hello_email(sender, instance, created, **kwargs):
     if created:  # только для новых пользователей
         html_content = render_to_string(
-            'hello_email.html',
+            'account/email/hello_email.html',
             {
                 'user': instance,
                 'site_url': settings.SITE_URL,

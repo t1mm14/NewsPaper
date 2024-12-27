@@ -14,23 +14,19 @@ def send_weekly_posts():
     one_week_ago = timezone.now() - timedelta(days=7)
     posts = Post.objects.filter(date_in_gte=one_week_ago)
     categories = posts.values_list('category__name',flat=True)
-    subscribers_email = User.objects.filter(subscribers_categories__name_in=categories).values_list('email', flat=True)
+    subscribers_email = User.objects.filter(subscribed_categories__name_in=categories).values_list('email', flat=True)
 
-    for user_email in subscribers_email:
-        html_message = render_to_string('weekly_posts.html',{
-            'recent_posts': posts,
-        })
+    html_message = render_to_string('weekly_posts.html',{'recent_posts': posts,})
     
     send_mail(
             subject='Еженедельная рассылка новостей',
             message='Пожалуйста, посмотрите на новые статьи.', 
             from_email='timofeiturzanov@yandex.ru', 
-            recipient_list=[user_email], 
+            recipient_list=[subscribers_email], 
             html_message=html_message, 
         )
 
 
-    
 
 @shared_task
 def created_post(pk):

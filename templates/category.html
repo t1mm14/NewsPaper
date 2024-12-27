@@ -1,7 +1,7 @@
 {% if category %}
     <h2>{{ category.name }}</h2>
     {% if user.is_authenticated %}
-        <form action="{% url 'subscribe_category' category.id %}" method="POST">
+        <form action="{% url 'subscribed_category' category.id %}" method="POST">
             {% csrf_token %}
             {% if user in category.subscribers.all %}
                 <button type="submit" class="btn btn-danger">Отписаться</button>

@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from django.template.loader import render_to_string
-from django.dispatch import receiver # импортируем нужный декоратор
+from django.dispatch import receiver 
 from django.core.mail import mail_managers
 from django.db.models.signals import post_save
 from django.contrib.auth.decorators import login_required
@@ -66,10 +66,8 @@ class PostCreate(PermissionRequiredMixin, CreateView):
             post.post_type = 'AT'
         
         try:
-            # Проверяем ограничение на количество публикаций
             post.clean()
         except ValidationError as e:
-            # Если превышен лимит, показываем ошибку
             messages.error(self.request, e.message)
             return super().form_invalid(form)
             
@@ -136,12 +134,10 @@ def send_notifications(preview, pk, title, subscribers):
 
 @receiver(post_save, sender=Post)
 def notify_managers_post(sender, instance, created, **kwargs):
-    if created:  # проверяем, что это создание, а не обновление
-        # Получаем всех пользователей из группы managers
+    if created:
         managers = Group.objects.get(name='managers').user_set.all()
         subscribers_emails = [user.email for user in managers]
 
-        # Формируем и отправляем письмо
         html_content = render_to_string(
             'post_created_email.html',
             {

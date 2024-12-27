@@ -11021,3 +11021,4 @@ news/__pycache__/database_service.cpython-312.pyc
 news/__pycache__/email_service.cpython-312.pyc
 news/__pycache__/scheduler.cpython-312.pyc
 news/__pycache__/tasks.cpython-312.pyc
+news/__pycache__/signals.cpython-312.pyc

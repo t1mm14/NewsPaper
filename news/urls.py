@@ -12,5 +12,4 @@ urlpatterns = [
     path('<int:pk>/post_delete/', PostDelete.as_view(), name='news_delete'),
     path('article/<int:pk>/post_delete/', PostDelete.as_view(), name='article_delete'),
     path('categories/<int:pk>/subscribe/', subscribe_category, name='subscribe_category'),
-    path('', IndexView.as_view()),
 ]
