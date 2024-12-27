@@ -64,13 +64,8 @@ class PostCreate(PermissionRequiredMixin, CreateView):
         post = form.save(commit=False)
         if self.request.path == '/post/article/create/':
             post.post_type = 'AT'
-        
-        try:
-            post.clean()
-        except ValidationError as e:
-            messages.error(self.request, e.message)
-            return super().form_invalid(form)
-            
+
+        post.author = self.request.user.author    
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -98,13 +93,6 @@ class PostDelete(DeleteView , PermissionRequiredMixin):
     model = Post
     template_name = 'post_delete.html'
 
-
-def author_now(request):
-    user = request.user
-    author_group = Group.objects.get(name='authors')
-    if not user.groups.filter(name='authors').exists():
-        user.groups.add(author_group)
-    return redirect('post_list')
 
 def send_notifications(preview, pk, title, subscribers):
     post = Post.objects.get(pk=pk)
@@ -149,7 +137,7 @@ def notify_managers_post(sender, instance, created, **kwargs):
         msg = EmailMultiAlternatives(
             subject=f'Новая статья: {instance.title}',
             body=f'Появилась новая статья: {instance.title}\n'
-                 f'Автор: {instance.author.username}\n'
+                 f'Автор: {instance.author.user.username}\n'
                  f'Категория: {", ".join([cat.name for cat in instance.category.all()])}\n'
                  f'Ссылка: {settings.SITE_URL}{instance.get_absolute_url()}',
             from_email=settings.DEFAULT_FROM_EMAIL,

@@ -5,7 +5,7 @@ from django.db.models.functions import Coalesce
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import timedelta
-
+from django.urls import reverse_lazy
 
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -72,19 +72,9 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
-    def clean(self):
-        today = timezone.now()
-        yesterday = today - timedelta(days=1)
-        
-        posts_per_day = Post.objects.filter(
-            author=self.author,
-            created_at__gte=yesterday
-        ).count()
-        
-        if posts_per_day >= 3:
-            raise ValidationError(
-                'Нельзя публиковать более трех новостей в сутки'
-            )
+    def get_absolut_url(self):
+        return reverse_lazy("post_filter", kwargs={"pk": self.pk})
+
 
 
 class PostCategory(models.Model):
