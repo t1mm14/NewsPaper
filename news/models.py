@@ -73,12 +73,9 @@ class Post(models.Model):
         return self.title
 
     def clean(self):
-        # Получаем текущее время
         today = timezone.now()
-        # Получаем время 24 часа назад
         yesterday = today - timedelta(days=1)
         
-        # Считаем количество постов автора за последние 24 часа
         posts_per_day = Post.objects.filter(
             author=self.author,
             created_at__gte=yesterday

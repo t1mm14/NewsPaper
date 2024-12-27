@@ -9,7 +9,7 @@ class NewsConfig(AppConfig):
     name = 'news'
 
     def ready(self):
-        import news.signals  # импортируем сигналы
+        import news.signals 
         from .tasks import send_mail
         from .scheduler import appointment_scheduler
         print('started')
@@ -19,7 +19,7 @@ class NewsConfig(AppConfig):
             appointment_scheduler.add_job(
                 id='weekly_mail_send',
                 func=send_mail,
-                trigger=CronTrigger(day_of_week='mon', hour=8, minute=0),  # Каждую понедельник в 8:00
+                trigger=CronTrigger(day_of_week='mon', hour=8, minute=0), 
                 replace_existing=True
             )
             appointment_scheduler.start()
