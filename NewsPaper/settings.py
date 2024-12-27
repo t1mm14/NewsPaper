@@ -65,16 +65,7 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
- 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'NewsPaper.settings')
- 
-app = Celery('NewsPaper')
-app.config_from_object('django.conf:settings', namespace = 'CELERY')
-
-app.autodiscover_tasks()
-
-
-DEFAULT_FROM_EMAIL = 'timofeiturzanov@yandex.ru',
+SITE_URL = ''
 
 SITE_ID = 2
 
@@ -182,7 +173,7 @@ EMAIL_PORT = 465  # порт smtp сервера
 EMAIL_HOST_USER = 'timofeiturzanov@yandex.ru'  # ваш почтовый ящик яндекса
 EMAIL_HOST_PASSWORD = 'Pilot7723'  # пароль от почты
 EMAIL_USE_SSL = True  # Яндекс использует ssl
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = 'timofeiturzanov@yandex.ru',
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
@@ -194,4 +185,3 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ACCOUNT_FORMS = {'signup': 'sign.models.CommonSignupForm'}
 
-r = redis.Redis(host='localhost', port=6379, db=0)

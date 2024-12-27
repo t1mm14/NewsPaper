@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Еженедельная рассылка новостей</title>
+</head>
+<body>
+    <h1>Здравствуйте!</h1>
+    <p>Вот новые статьи за неделю:</p>
+    <ul>
+        {% for post in recent_posts %}
+            <li><a href="{{ post.url }}">{{ post.title }}</a></li>
+        {% endfor %}
+    </ul>
+    <p>С уважением,<br>t1mm1</p>
+</body>
+</html>

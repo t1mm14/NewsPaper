@@ -7,20 +7,31 @@ from apscheduler.triggers.cron import CronTrigger
 from django.core.management.base import BaseCommand
 from django_apscheduler.jobstores import DjangoJobStore
 from django_apscheduler.models import DjangoJobExecution
- 
+from django.utils import timezone
+from datetime import timedelta
+from news.models import Post, PostCategory, Category, UserCategorySubscription
+from django.urls import reverse
+from urllib.parse import urljoin
+from django.conf import settings
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from NewsPaper.news.tasks import send_weekly_articles
  
  
 logger = logging.getLogger(__name__)
  
  
 def my_job():
-    send_mail(
-        'New News',
-        'Проверьте новые новости!',
-        from_email='timofeiturzanov@yandex.ru',
-        recipient_list=['timofeiturzanov@yandex.ru'],
-    )
+    one_week_ago = timezone.now() - timedelta(days=7)
+    recent_posts = Post.objects.filter(create_time__gte=one_week_ago).order_by('-create_time')
+    categories = Category.objects.filter(id__in=PostCategory.objects.filter(post__in=recent_posts).values('id')).distinct()
+    subscriptions = UserCategorySubscription.objects.filter(category__in=categories)
+    unique_users_email = set(subscription.user.email for subscription in subscriptions)
+    
+    for user_email in unique_users_email:    
+        html_message = render_to_string('profile/weekly_notify_posts.html', {
+            'recent_posts': recent_posts,
+            })
  
  
 def delete_old_job_executions(max_age=604_800):
