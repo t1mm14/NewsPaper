@@ -80,7 +80,7 @@ class PostCreate(PermissionRequiredMixin, CreateView):
         yesterday = today - timedelta(days=1)
         posts_today = Post.objects.filter(
             author=self.request.user.author,
-            created_at__gte=yesterday
+            date_in__gte=yesterday
         ).count()
         posts_left = 3 - posts_today
         context['posts_left'] = posts_left
