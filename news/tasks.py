@@ -12,10 +12,10 @@ from django.core.mail import send_mail
 @shared_task
 def send_weekly_posts():
     one_week_ago = timezone.now() - timedelta(days=7)
-    posts = Post.objects.filter(date_in_gte=one_week_ago)
+    posts = Post.objects.filter(date_in__gte=one_week_ago)
     categories = posts.values_list('category__name',flat=True)
-    subscribers_email = User.objects.filter(subscribed_categories__name_in=categories).values_list('email', flat=True)
-
+    subscribers_email = User.objects.filter(subscribed_categories__name__in=categories).values_list('email', flat=True)
+    subscribers_email = set(subscribers_email)
     html_message = render_to_string('weekly_posts.html',{'recent_posts': posts,})
     
     send_mail(
