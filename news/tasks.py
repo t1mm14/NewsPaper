@@ -1,31 +1,36 @@
-from сelery import shared_task
+from celery import shared_task
 from django.core.mail import EmailMultiAlternatives
-from models import Post
+from .models import Post
 from django.template.loader import render_to_string
 from django.conf import settings
-from .database_service import get_subscribed_users, get_new_articles 
-from apscheduler.schedulers.background import BackgroundScheduler
-from .email_service import send_email
-from apscheduler.triggers.cron import CronTrigger
-
-appointment_scheduler = BackgroundScheduler()
+from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import timedelta
+from django.core.mail import send_mail
 
 
 @shared_task
 def send_weekly_posts():
-    users = get_subscribed_users()  # Получите пользователей, подписанных на категории
-    for user in users:
-        articles = get_new_articles(user.subscription_category)  # Получите новые статьи для категории
-        if articles:
-            article_links = "\n".join([f"{article.title}: {article.url}" for article in articles])
-            email_content = f"Здравствуйте, {user.name}!\n\nВот новые статьи за неделю:\n{article_links}"
-            send_email(user.email, "Новые статьи на вашей подписке", email_content)  # Отправьте email
+    one_week_ago = timezone.now() - timedelta(days=7)
+    posts = Post.objects.filter(date_in_gte=one_week_ago)
+    categories = posts.values_list('category__name',flat=True)
+    subscribers_email = User.objects.filter(subscribers_categories__name_in=categories).values_list('email', flat=True)
+
+    for user_email in subscribers_email:
+        html_message = render_to_string('weekly_posts.html',{
+            'recent_posts': posts,
+        })
+    
+    send_mail(
+            subject='Еженедельная рассылка новостей',
+            message='Пожалуйста, посмотрите на новые статьи.', 
+            from_email='timofeiturzanov@yandex.ru', 
+            recipient_list=[user_email], 
+            html_message=html_message, 
+        )
 
 
-
-
-
-
+    
 
 @shared_task
 def created_post(pk):
@@ -36,10 +41,8 @@ def created_post(pk):
         subscribers = category.subscribers.all()
         subscribers_emails += [s.email for s in subscribers]
     
-    # Убираем дубликаты
     subscribers_emails = list(set(subscribers_emails))
     
-    # Формируем превью статьи
     preview = post.preview()
     html_content = render_to_string(
         'post_created_email.html',
@@ -60,7 +63,6 @@ def created_post(pk):
         to=subscribers_emails,
     )
         
-    # Добавляем HTML-версию письма
     msg.attach_alternative(html_content, 'text/html')
     msg.send()
 

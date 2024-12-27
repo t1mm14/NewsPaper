@@ -1,6 +1,6 @@
 import os
 from celery import Celery
-from celery.shedules import crontab
+from celery import crontab
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'NewsPaper.settings')
  
