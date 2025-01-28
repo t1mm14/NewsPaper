@@ -218,6 +218,10 @@ LOGGING = {
             'format': '%(asctime)s %(levelname)s %(module)s %(message)s',
             'datefmt': '%Y-%m-%d %H:%M:%S',
         },
+        'email': {
+            'format': '%(asctime)s %(levelname)s %(message)s %(pathname)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
     },
     'filters': {
         'debug_filter': {
@@ -258,7 +262,7 @@ LOGGING = {
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
-            'exclude': ['django.security', 'django.request'],  # фильтр для сообщений
+            'formatter': 'email',
         },
     },
     'loggers': {
